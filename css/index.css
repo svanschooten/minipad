@@ -1,0 +1,137 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background: radial-gradient(lightblue, lightgray);
+    top: 0;
+    overflow: hidden;
+}
+
+#minipad {
+    height: 100%;
+}
+
+.fullsize {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+#effects-drawer {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 40em;
+    overflow: auto;
+    transition: right ease-in-out .3s ;
+    background: cornflowerblue;
+    padding: 1em;
+}
+
+.center {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.controls {
+    overflow: auto;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 0;
+    padding-top: 1em;
+}
+
+.elements {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: auto;
+}
+
+.element-name {
+    text-align: center;
+    font-family: "Bitstream Charter", serif;
+}
+
+.element {
+    border: .25em solid;
+    border-radius: 1em;
+    width: 20em;
+    height: 5em;
+    margin: 1em;
+    padding: 0.5em;
+    display: grid;
+    transition: background-color ease-in-out 0.1s;
+}
+
+.btw-wrapper {
+    width: 5em;
+    height: 3em;
+    text-align: center;
+}
+
+.btw-wrapper:hover .i {
+    opacity: 0.75;
+}
+
+.element h2, h3 {
+    margin: 0;
+    padding: 0;
+    font-size: 1em;
+}
+
+.element i {
+    font-size: 3em;
+    color: dimgrey;
+    transition: color ease-in-out 0.2s;
+}
+
+.element .btw-wrapper:hover i {
+    color: black;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+.sub-element {
+    width: 45%;
+    height: 45%;
+}
+
+.effect {
+    margin: 0.5em;
+    padding: 0.5em;
+    border-left: 2px solid rgba(128, 128, 128, 0.45);
+}
+.delete-effect:hover {
+    color: black;
+}
+
+.delete-effect {
+    position: relative;
+    right: -95%;
+    top: 0;
+    margin: 0;
+    z-index: 999;
+    padding: 0;
+    color: rgb(128, 128, 128);
+    transition: color ease-in-out .1s;
+}

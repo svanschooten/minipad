@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>MiniPad</title>
+    <script src="https://kit.fontawesome.com/c6218e116d.js" crossorigin="anonymous"></script>
+    <link href="css/index.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+    <script src="js/constants.js"></script>
+    <script src="js/filter.js"></script>
+    <script src="js/elements.js"></script>
+</head>
+<body>
+<div id="minipad">
+    <div class="fullsize" v-on:click="clearFocus()">
+        <h1>MiniPad {{ state == 'training' ? "(training)" : null }}</h1>
+        <div class="controls center">
+            Controls
+            <button v-on:click="addElement" title="Add a new element"><i class="far fa-plus-square"></i> Add element</button>
+            <button v-on:click="saveMiniPad" title="Save the current minipad"><i class="far fa-download"></i> Save</button>
+            <button v-on:click="loadMiniPad" title="Load the minipad from memory"><i class="far fa-upload"></i> Load</button>
+            <button v-on:click="clearMiniPad" title="Clear the save minipad from memory"><i class="fal fa-empty-set"></i> Clear</button>
+
+        </div>
+        <div class="elements center">
+            <div class="element" v-for="(element, elementIdx) in elements"
+                 v-bind:style="{
+                    borderColor: borderColor(element),
+                    backgroundColor: backgroundColor(element)
+                 }"
+            >
+                <h2 class="element-name">{{ element.name }}</h2>
+                <div style="display: flex; flex-direction: row">
+                    <div class="btw-wrapper upload-btn-wrapper" title="Upload/drag your audio sample">
+                        <i class="far fa-file-audio"></i>
+                        <input type="file" v-on:change="uploadSound(element, $event)" v-on:click="noOp($event)" value="Sample">
+                    </div>
+                    <div class="btw-wrapper" v-on:click="trainElement(element, $event)" title="Train which key is used">
+                        <span class="fa-stack">
+                            <i class="fas fa-keyboard fa-stack-2x"></i>
+                              <span class="fa fa-stack-1x">
+                                  <span style="font-size: 1.5em; color: black; margin-top:0.5em; display:block;">
+                                  {{ element.key }}
+                                  </span>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="btw-wrapper" v-on:click="editElement(element, $event)" title="Edit the filters">
+                        <i class="fas fa-waveform"></i>
+                    </div>
+                    <div class="btw-wrapper" v-on:click="removeElement(element)" title="Delete this element">
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
+                </div>
+                <audio v-bind:src="element.source" v-bind:id="element.audio">
+                    Your browser does not support the
+                    <code>audio</code> element.
+                </audio>
+            </div>
+        </div>
+    </div>
+    <div id="effects-drawer" v-bind:style="{
+            right: (state === 'editing' ? '0' : '-42em')
+        }">
+        <div v-if="state === 'editing'">
+            <h2 class="element-name">{{ elements[editing].name }}</h2>
+            <button v-on:click="createEmptyFilterData(elements[editing])">Add filter</button>
+            <div class="effect" v-for="(filter, filterIdx) in elements[editing].filters">
+                <i v-on:click="removeFilter(elements[editing], filterIdx)" class="fas fa-do-not-enter delete-effect" title="Delete this filter"></i>
+                <label>
+                    Filter
+                    <select v-model="filter.filter" v-on:change="redraw">
+                        <option v-for="filterName in Object.keys(filterTypes)" v-bind:value="filterName">{{ filterName }}</option>
+                    </select>
+                </label>
+                <br />
+                <label>
+                    Type
+                    <select v-model="filter.type" v-on:change="redraw">
+                        <option v-for="filterTypeName in Object.keys(filterTypes[filter.filter])" v-bind:value="filterTypeName">{{ filterTypeName }}</option>
+                    </select>
+                </label>
+                <br />
+                <label v-if="filterTypes[filter.filter][filter.type].frequency">
+                    Frequency
+                    <input type="number" v-bind:value="filter.frequency" v-on:wheel="scrollNumber($event)" v-on:change="updateValue(filter, 'frequency', $event)">
+                </label>
+                <br v-if="filterTypes[filter.filter][filter.type].frequency" />
+                <label v-if="filterTypes[filter.filter][filter.type].q">
+                    Q
+                    <input type="number" v-bind:value="filter.q" v-on:change="updateValue(filter, 'q', $event)">
+                </label>
+                <br v-if="filterTypes[filter.filter][filter.type].q" />
+                <label v-if="filterTypes[filter.filter][filter.type].gain">
+                    Gain
+                    <input type="number" v-bind:value="filter.gain" v-on:change="updateValue(filter, 'gain', $event)">
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/index.js"></script>
+</body>
+</html>
